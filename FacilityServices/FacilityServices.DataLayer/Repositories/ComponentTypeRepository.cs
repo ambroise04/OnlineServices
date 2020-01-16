@@ -34,6 +34,7 @@ namespace FacilityServices.DataLayer.Repositories
             return facilityContext.ComponentTypes
                 .AsNoTracking()
                 .Include(r => r.RoomComponents)
+                .Where(ct => ct.Archived != true)
                 .Select(x => x.ToTransfertObject())
                 .ToList();
         }
@@ -43,7 +44,7 @@ namespace FacilityServices.DataLayer.Repositories
             return facilityContext.ComponentTypes
             .AsNoTracking()
             .Include(r => r.RoomComponents)
-            .FirstOrDefault(x => x.Id == Id)
+            .FirstOrDefault(x => x.Id == Id && x.Archived != true)
             .ToTransfertObject();
         }
 
@@ -85,7 +86,7 @@ namespace FacilityServices.DataLayer.Repositories
                 throw new Exception($"ComponentTypeRepository. Update(ComponentTypeTransfertObject) no record to update.");
 
             var attachedComponentTypes = facilityContext.ComponentTypes
-                .FirstOrDefault(x => x.Id == Entity.Id);
+                .FirstOrDefault(x => x.Id == Entity.Id && x.Archived != true);
 
             if (attachedComponentTypes != default)
             {

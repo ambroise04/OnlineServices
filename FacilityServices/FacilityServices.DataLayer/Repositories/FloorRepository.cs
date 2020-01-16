@@ -1,5 +1,4 @@
-﻿using FacilityServices.DataLayer.Entities;
-using FacilityServices.DataLayer.Extensions;
+﻿using FacilityServices.DataLayer.Extensions;
 using Microsoft.EntityFrameworkCore;
 using OnlineServices.Common.FacilityServices.Interfaces.Repositories;
 using OnlineServices.Common.FacilityServices.TransfertObjects;
@@ -39,6 +38,7 @@ namespace FacilityServices.DataLayer.Repositories
         public IEnumerable<FloorTO> GetAll()
         => facilityContext.Floors
             .AsNoTracking()
+            .Where(f => f.Archived != true)
             .Select(x => x.ToTransfertObject())
             .ToList();
 
@@ -46,7 +46,7 @@ namespace FacilityServices.DataLayer.Repositories
         {
             return facilityContext.Floors
             .AsNoTracking()
-            .FirstOrDefault(x => x.Id == Id)
+            .FirstOrDefault(x => x.Id == Id && x.Archived != true)
             .ToTransfertObject();
         }
 
