@@ -7,12 +7,13 @@ using OnlineServices.Common.FacilityServices.Interfaces.Repositories;
 using OnlineServices.Common.FacilityServices.TransfertObjects;
 using OnlineServices.Common.TranslationServices.TransfertObjects;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace FacilityServices.DataLayerTests.RepositoriesTests.CommentRepositoryTests
 {
     [TestClass]
-    public class RemoveCommentById
+    public class RemoveCommentByIdTests
     {
         [TestMethod]
         public void RemoveCommentById_AddNewCommentThenRemoveIt_ReturnsTrue()
@@ -74,7 +75,7 @@ namespace FacilityServices.DataLayerTests.RepositoriesTests.CommentRepositoryTes
 
             // Assert
             Assert.IsTrue(result);
-            Assert.AreEqual(default, commentRepository.GetById(addedComment.Id));
+            Assert.ThrowsException<KeyNotFoundException>(() => commentRepository.GetById(addedComment.Id));
         }
     }
 }

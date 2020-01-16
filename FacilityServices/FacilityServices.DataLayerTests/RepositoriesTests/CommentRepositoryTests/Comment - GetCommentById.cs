@@ -12,7 +12,7 @@ using System.Reflection;
 namespace FacilityServices.DataLayerTests.RepositoriesTests.CommentRepositoryTests
 {
     [TestClass]
-    public class GetCommentById
+    public class GetCommentByIdTests
     {
         [TestMethod]
         public void GetCommentById_AddNewCommentThenRetrieveIt_ReturnsCommentNotNull()

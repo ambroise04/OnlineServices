@@ -46,7 +46,7 @@ namespace FacilityServices.DataLayer.Repositories
 
         public CommentTO GetById(int Id)
         {
-            return facilityContext.Comments
+            var comment = facilityContext.Comments
                 .AsNoTracking()
                 .Include(c => c.Incident)
                     .ThenInclude(i => i.Issue)
@@ -54,8 +54,14 @@ namespace FacilityServices.DataLayer.Repositories
                 .Include(x => x.Incident)
                     .ThenInclude(i => i.Room)
                         .ThenInclude(r => r.Floor)
-                .FirstOrDefault(c => c.Id == Id)
-                .ToTransfertObject();
+                .FirstOrDefault(c => c.Id == Id);
+
+            if (comment is null)
+            {
+                throw new KeyNotFoundException($"No comment with ID={Id} was found.");
+            }
+
+            return comment.ToTransfertObject();
         }
 
         public List<CommentTO> GetCommentsByIncidentId(int incidentId)
