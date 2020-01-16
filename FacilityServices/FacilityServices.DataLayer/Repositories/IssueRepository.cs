@@ -64,26 +64,25 @@ namespace FacilityServices.DataLayer.Repositories
 
         public bool Remove(int Id)
         {
-            if (!facilityContext.Issues.Any(x => x.Id == Id))
+            if (!facilityContext.Issues.Any(x => x.Id == Id && x.Archived != true))
                 throw new Exception($"IssueRepository. Delete(IssueId = {Id}) no record to delete.");
 
-            var ReturnValue = false;
-
-            var issue = facilityContext.Issues.FirstOrDefault(x => x.Id == Id);
+            var issue = facilityContext.Issues.FirstOrDefault(x => x.Id == Id && x.Archived != true);
+            
             if (issue != default)
             {
                 try
                 {
-                    facilityContext.Issues.Remove(issue);
-                    ReturnValue = true;
+                    issue.Archived = true;
+                    return facilityContext.Issues.Update(issue).Entity.Archived; ;
                 }
                 catch (Exception)
                 {
-                    ReturnValue = false;
+                    return false;
                 }
             }
 
-            return ReturnValue;
+            return false;
         }
 
         public IssueTO Update(IssueTO Entity)

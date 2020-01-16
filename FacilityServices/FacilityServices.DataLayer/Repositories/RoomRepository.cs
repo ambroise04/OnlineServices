@@ -78,8 +78,9 @@ namespace FacilityServices.DataLayer.Repositories
             }
 
             var entityEF = facilityContext.Rooms.Find(entity.Id);
-            var tracking = facilityContext.Rooms.Remove(entityEF);
-            return tracking.State == EntityState.Deleted;
+            entityEF.Archived = true;
+            var tracking = facilityContext.Rooms.Update(entityEF);
+            return tracking.Entity.Archived;
         }
 
         public bool Remove(int Id)
