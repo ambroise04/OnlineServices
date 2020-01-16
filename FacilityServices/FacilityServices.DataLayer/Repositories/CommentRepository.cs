@@ -101,7 +101,14 @@ namespace FacilityServices.DataLayer.Repositories
                 throw new ArgumentNullException(nameof(Entity));
             }
 
-            var comment = facilityContext.Comments.FirstOrDefault(c => c.Id == Entity.Id);
+            var comment = facilityContext.Comments
+                .Include(c => c.Incident)
+                    .ThenInclude(i => i.Issue)
+                        .ThenInclude(i => i.ComponentType)
+                .Include(x => x.Incident)
+                    .ThenInclude(i => i.Room)
+                        .ThenInclude(r => r.Floor)
+                .FirstOrDefault(c => c.Id == Entity.Id);
 
             if (comment == null)
             {
@@ -111,6 +118,7 @@ namespace FacilityServices.DataLayer.Repositories
             comment.UpdateFromDetached(Entity.ToEF());
 
             var updatedComment = facilityContext.Comments.Update(comment);
+            updatedComment.State = EntityState.Detached;
             return updatedComment.Entity.ToTransfertObject();
         }
     }
