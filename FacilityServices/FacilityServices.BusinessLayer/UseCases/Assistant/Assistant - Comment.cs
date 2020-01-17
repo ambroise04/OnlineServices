@@ -12,23 +12,16 @@ namespace FacilityServices.BusinessLayer.UseCases
                 throw new ArgumentNullException(nameof(comment));
 
             if (comment.Id != 0)
-                throw new Exception("Existing comment");
+                throw new LoggedException("The comment ID has to be 0 when adding a new comment.");
 
-            try
+            if (comment.Incident is null)
             {
-                var addedComment = unitOfWork.CommentRepository.Add(comment);
-                return addedComment;
+                throw new LoggedException("The comment has to reference an existing incident.");
             }
-            catch (LoggedException ex)
-            {
-                // Todo
-                throw;
-            }
-            catch (Exception ex)
-            {
-                // Todo
-                throw;
-            }
+
+            // Todo check unique constraints, check if room + componenttype exists, etc.
+            var addedComment = unitOfWork.CommentRepository.Add(comment);
+            return addedComment;
         }
     }
 }
